@@ -23,12 +23,19 @@ object WebServer extends App{
   val numbers: Source[Int, NotUsed] = Source.fromIterator(() => Iterator.continually(Random.nextInt()))
 
 
-  val fileStream: Source[ByteString, Unit] = StreamConverters.asOutputStream().mapMaterializedValue(out => {
+  private val stream: Source[ByteString, OutputStream] = StreamConverters.asOutputStream()
+  val fileStream: Source[ByteString, Unit] = stream.mapMaterializedValue(out => {
     println(s"I am materialized $out")
-//    Future {
-      out.write("Hello how you doing today".getBytes)
+      out.write("He".getBytes)
+      Thread.sleep(4000)
+      out.write("Ha".getBytes)
+      println("Written to the file")
+      Thread.sleep(2000)
+    Future{
+      println("in close")
       out.close()
-//    }
+      println("in close 2")
+    }
   })
 
   val route = get {
@@ -39,7 +46,11 @@ object WebServer extends App{
     } ~
       path("stream") {
         get {
-          complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, fileStream))
+          complete({
+            val chunked: HttpEntity.Chunked = HttpEntity(ContentTypes.`text/plain(UTF-8)`, fileStream)
+            println("in complete")
+            chunked
+          })
         }
       }
 

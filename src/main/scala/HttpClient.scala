@@ -24,7 +24,9 @@ object HttpClient extends App{
     val source = response.entity.dataBytes
 //    source.runForeach(println)
     val fold: Future[String] = source.runFold("")((str, bs) ⇒ {
-      str + bs.utf8String
+      val s = str + bs.utf8String
+      println(s)
+      s
     })
     fold.foreach(println)
   })
