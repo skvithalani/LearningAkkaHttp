@@ -1,7 +1,10 @@
+package extra
+
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Source, StreamConverters}
 import akka.util.ByteString
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

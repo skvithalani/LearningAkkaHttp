@@ -1,4 +1,4 @@
-package showcase
+package demo
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
